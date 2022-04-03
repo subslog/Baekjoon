@@ -2,6 +2,6 @@ N, X = map(int, input().split())
 
 A = list(map(int, input().split()))
 
-for i in range(0, N):
-    if A[i] < X:
-        print(f'{A[i]}', end=' ')
+for i in A:
+    if i < X:
+        print(f'{i}', end=' ')
