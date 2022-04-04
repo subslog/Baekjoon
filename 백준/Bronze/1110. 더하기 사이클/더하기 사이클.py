@@ -1,10 +1,13 @@
-N = N_new = int(input())
+N = input()
 i = 0
 
+if int(N) < 10:
+    N = '0' + N
+
+N_new = N
+
 while True:
-    N_post = N_new // 10
-    N_end = N_new % 10
-    N_new = (N_end * 10) + ((N_post + N_end) % 10)
+    N_new = N_new[1] + str(int(N_new[0]) + int(N_new[1]))[-1]
     i += 1
 
     if N_new == N:
