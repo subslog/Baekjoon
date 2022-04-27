@@ -1,9 +1,9 @@
 import sys
 
-decimal = list(range(123456 * 2 + 1))
+decimal = [1] * (123456 * 2 + 1)
 
 # 123456 * 2까지 에라토스테네스의 체 진행
-for i in decimal[2:]:
+for i in range(2, len(decimal)):
     # 요소의 값이 0이 아니면 진행
     if decimal[i]:
         # i의 배수를 0으로 변환
@@ -18,8 +18,6 @@ while True:
     if n == 0:
         break
     # 소수의 수 카운터
-    count = 0
-    for i in range(n + 1, 2 * n + 1):
-        if decimal[i]:
-            count += 1
+    count = sum(decimal[n + 1:n * 2 + 1])
+    
     print(count)
