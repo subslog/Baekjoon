@@ -1,0 +1,20 @@
+def solution(lottos, win_nums):
+    # 당첨된 번호
+    same = set(lottos) & set(win_nums)
+    # 당첨된 번호 + 0의 수가 최대
+    max = len(same) + lottos.count(0)
+    # 최대 순위 계산
+    if max <= 1:
+        max_rank = 6
+    else:
+        max_rank = 7 - max
+    # 당첨된 번호가 최소
+    min = len(same)
+    # 최소 순위 계산
+    if min <= 1:
+        min_rank = 6
+    else:
+        min_rank = 7 - min
+            
+    answer = [max_rank, min_rank]
+    return answer
