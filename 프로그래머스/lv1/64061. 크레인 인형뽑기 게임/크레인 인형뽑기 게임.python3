@@ -1,0 +1,30 @@
+def solution(board, moves):
+
+    # 인형을 담을 바구니
+    basket = []
+    # 터뜨린 인형 수
+    answer = 0
+
+    # 리스트 뒤집기
+    board.reverse()
+    new_board = list(map(list, zip(*board)))
+
+    # 0 모두 제거
+    for i in range(len(new_board)):
+        new_board[i] = [j for j in new_board[i] if j not in [0]]
+
+    # 크레인 움직임만큼 반복
+    for i in moves:
+        # 인덱스 편의를 위해 -1
+        i -= 1
+        # 요소가 있을 경우만 뽑기 진행
+        if len(new_board[i]):
+            # 맨 위에 인형을 뽑아 바구니에 넣는다.
+            basket += [new_board[i].pop()]
+            # 바구니에 인형이 2개 이상이고, 연속된 인형이면
+            if len(basket) >= 2 and basket[-1] == basket[-2]:
+                # 터트리고 카운트
+                del basket[-2:]
+                answer += 2
+    
+    return answer
