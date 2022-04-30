@@ -1,6 +1,6 @@
 # [level 1] 실패율 - 42889 
 
-[문제 링크](https://programmers.co.kr/learn/courses/30/lessons/42889) 
+[문제 링크](https://programmers.co.kr/learn/courses/30/lessons/42889?language=python3) 
 
 ### 성능 요약
 
