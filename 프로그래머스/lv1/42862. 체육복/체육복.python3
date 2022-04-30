@@ -1,0 +1,18 @@
+def solution(n, lost, reserve):
+    # 여벌이 있는데 도난당한 학생 제거
+    lost_del = sorted(list(set(lost) - set(reserve)))
+    reserve_del = list(set(reserve) - set(lost))
+
+    # 현재 체육 가능한 인원
+    answer = n - len(lost_del)
+
+    # 앞 학생부터 작은 체육복부터 찾기
+    for i in lost_del:
+        if i - 1 in reserve_del:
+            answer += 1
+            reserve_del.remove(i - 1)
+        elif i + 1 in reserve_del:
+            answer += 1
+            reserve_del.remove(i + 1)
+
+    return answer
