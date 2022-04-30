@@ -1,0 +1,20 @@
+import re
+
+def solution(dartResult):
+    # 보너스 및 옵션 정의
+    bonus = {'S': 1, 'D': 2, 'T': 3}
+    option = {'': 1, '*': 2, '#': -1}
+
+    # 숫자 1개이상, SDT 중 1개, *# 중 0~1개 문자를 각각 듀플로 묶어 리스트로 반환
+    dart_list = re.findall('(\d+)([SDT])([*#]?)', dartResult)
+
+    for i in range(len(dart_list)):
+        # 보너스에 별표가 있으면 이전 점수 * 2
+        if dart_list[i][2] == '*' and i > 0:
+            dart_list[i - 1] *= 2
+        # 점수^보너스*옵션
+        dart_list[i] = int(dart_list[i][0]) ** bonus[dart_list[i][1]] * option[dart_list[i][2]]
+    
+    answer = sum(dart_list)
+
+    return answer
