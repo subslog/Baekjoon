@@ -1,0 +1,12 @@
+def solution(n, arr1, arr2):
+
+    result = []
+
+    # 배열 길이만큼 반복
+    for i in range(n):
+        # arr1과 arr2를 or 연산하여 저장
+        result += [bin(arr1[i] | arr2[i]).replace('0b', '').zfill(n)]
+        result[i] = result[i].replace('1', '#')
+        result[i] = result[i].replace('0', ' ')
+        
+    return result
