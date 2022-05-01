@@ -1,36 +1,40 @@
 def solution(p):
-    answer = ''
+    answer = ''     # 정답 저장
 
+    # 빈 문자열이면 빈 문자열 반환
     if len(p) == 0:
         return ''
 
-    u = ''
+    right = True    # True:올바른, False:균형잡힌
+    count = 0       # 균형잡힌 괄호 판단 카운터
 
-    for idx, avg in enumerate (p):
-        u += avg
-
-        if len(u) == len(p) and u[0] == '(':
-            answer = u
-            
-            return answer
-        elif u.count('(') == u.count(')'):
-            if u[0] == '(':
-                u += solution(p[idx + 1:])
-                answer = u
-
-                return answer
+    # 문자열만큼 반복
+    for avg in range(len(p)):
+        # '('로 시작하면 올바른 괄호가 된다.
+        if p[avg] == '(':
+            count += 1
+        else:
+            count -= 1
+        # ')'로 시작해 균형잡힌 괄호
+        if count < 0:
+            right = False
+        # '(', ')' 수가 동일하면 균형잡힌 괄호
+        if count == 0:
+            # 올바른 괄호면
+            if right:
+                # u + v 재귀 호출
+                u = p[:avg + 1] + solution(p[avg + 1:])
+                
+                return u
+            # 균형잡힌 괄호면
             else:
-                blank = '('
-                blank += solution(p[idx + 1:])
-                blank += ')'
-                u = u[1:-1]
-                u_reversal = ''
-                for reversal in u:
-                    if reversal == '(':
-                        u_reversal += ')'
-                    else:
-                        u_reversal += '('
-                blank += u_reversal
-                answer = blank
+                # 빈 문자열의 '()' 사이에 v 재귀 호출
+                blank = '(' + solution(p[avg + 1:]) + ')'
+                # u 앞뒤 괄호 제거 후 뒤집기
+                u = ''.join([')' if i == '(' else '(' for i in p[1:avg]])
 
-                return answer
+                return blank + u    # u를 뒤에 연결해 반환
+
+# '(' == ')' : 균형잡힌 괄호 문자열
+# '(' == ')' : 짝도 맞으면 올바른 괄호 문자열
+# retuen : 균형 -> 올바른 관호 문자열 반환
