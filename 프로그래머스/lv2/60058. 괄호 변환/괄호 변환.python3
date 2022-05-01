@@ -1,0 +1,36 @@
+def solution(p):
+    answer = ''
+
+    if len(p) == 0:
+        return ''
+
+    u = ''
+
+    for idx, avg in enumerate (p):
+        u += avg
+
+        if len(u) == len(p) and u[0] == '(':
+            answer = u
+            
+            return answer
+        elif u.count('(') == u.count(')'):
+            if u[0] == '(':
+                u += solution(p[idx + 1:])
+                answer = u
+
+                return answer
+            else:
+                blank = '('
+                blank += solution(p[idx + 1:])
+                blank += ')'
+                u = u[1:-1]
+                u_reversal = ''
+                for reversal in u:
+                    if reversal == '(':
+                        u_reversal += ')'
+                    else:
+                        u_reversal += '('
+                blank += u_reversal
+                answer = blank
+
+                return answer
