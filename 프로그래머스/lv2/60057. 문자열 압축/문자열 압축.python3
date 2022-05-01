@@ -1,0 +1,28 @@
+def solution(s):
+    
+    char_len = len(s)   # 문자열 길이
+    answer = char_len   # 결과 저장
+
+    # 1 ~ 문자열 길이 절반까지 잘라서 압축 확인
+    for unit in range(1, len(s) // 2 + 1):
+        short = char_len    # 압축 후 길이
+        re_count = 1        # 반복 횟수 카운트
+
+        # 단위 압축
+        for j in range(0, char_len - unit + 1, unit):
+            # 다음 문자와 같지 않으면
+            if s[j:j + unit] != s[j + unit:j + unit * 2]:
+                # 반복이 있었으면
+                if re_count > 1:
+                    short += len(str(re_count))     # 문자 숫자만큼 길이 증가
+                    short -= len(s[j:j + unit]) * (re_count - 1)    # 반복된 문자 수만큼 길이 감소
+                    re_count = 1    # 반복 횟수 초기화
+            # 다음 문자와 같으면
+            else:
+                re_count += 1       # 반복 횟수 증가
+                
+        # 더 짧은 길이가 나오면 업데이트
+        if short < answer:
+            answer = short
+    
+    return answer
