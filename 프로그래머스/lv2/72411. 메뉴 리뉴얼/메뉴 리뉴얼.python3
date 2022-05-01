@@ -1,0 +1,38 @@
+import itertools
+
+def solution(orders, course):
+    answer = []     # 정답 변수
+    order = {}      # 메뉴 카운트 딕셔너리
+    # 주문 리스트 반복
+    for menus in orders:
+        # 주문 리스트에서 발생할 수 있는 경우의 수 조합
+        for idx in range(2, len(menus) + 1):
+            # 경우의 수를 조합할 때 정렬 필요
+            for set in list(itertools.combinations((sorted(menus)), idx)):
+                # 듀플로 반환되어 join으로 문자열 변경
+                chr_join = ''.join(set)
+                # 메뉴 조합이 있으면 +1
+                if chr_join in order:
+                    order[chr_join] += 1
+                # 메뉴 조합이 없으면 생성
+                else:
+                    order[chr_join] = 1
+    # 주문한 수량 기준으로 오름차순 정렬
+    order_sort = sorted(order.items(), key=lambda x: x[1], reverse=True)
+    # 주문 횟수 2번 미만 제거
+    order_del = [i for i in order_sort if i[1] >= 2]
+
+    # 단품 메뉴 수 반복
+    for i in course:
+        # 코스요리에 호함되는 단품 메뉴 리스트 추가
+        temp = [result for result in order_del if len(result[0]) == i]
+        answer += [result[0] for result in temp if result[1] >= temp[0][1]]
+
+    return sorted(answer)
+
+# 메뉴 새로 구성
+# 가장 많이 주문한 단품 -> 코스화
+# 코스화 조건 : 최소 2개 메뉴, 최소 2명에게 주문
+# orders : 각 손님이 주문한 단품 메뉴 - list
+# course : 코스요리에 포함되는 단품 메뉴 수 - list
+# return : 코스요리 - list
