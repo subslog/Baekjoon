@@ -24,14 +24,7 @@ def solution(str1, str2):
     # 교집합 수
     intersection_count = sum([min(str1_count[i], str2_count[i]) for i in intersection])
     # 합집합 수
-    union_count = 0
-    for i in union:
-        if i in str1_count and i in str2_count:
-            union_count += max(str1_count[i], str2_count[i])
-        elif i in str1_count:
-            union_count += str1_count[i]
-        elif i in str2_count:
-            union_count += str2_count[i]
+    union_count = sum([max(str1_count.get(i, 0), str2_count.get(i, 0)) for i in union])
 
     answer = int(intersection_count / union_count * 65536)
 
