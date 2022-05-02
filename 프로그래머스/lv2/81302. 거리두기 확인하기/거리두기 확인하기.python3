@@ -1,0 +1,70 @@
+def solution(places):
+    answer = [1, 1, 1, 1, 1]
+    for z, room in enumerate (places):
+        for i, line in enumerate(room):
+            for j, user in enumerate(line):
+                if user == 'P':
+                    if i - 1 >= 0 and places[z][i - 1][j] != 'X':
+                        if places[z][i - 1][j] == 'P':
+                            answer[z] = 0
+                            break
+                        elif j - 1 >= 0 and places[z][i - 1][j - 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif j + 1 < 5 and places[z][i - 1][j + 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif i - 2 >= 0 and places[z][i - 2][j] == 'P':
+                            answer[z] = 0
+                            break
+                    if i + 1 < 5 and places[z][i + 1][j] != 'X':
+                        if places[z][i + 1][j] == 'P':
+                            answer[z] = 0
+                            break
+                        elif j - 1 >= 0 and places[z][i + 1][j - 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif j + 1 < 5 and places[z][i + 1][j + 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif i + 2 < 5 and places[z][i + 2][j] == 'P':
+                            answer[z] = 0
+                            break
+                    if j - 1 >= 0 and places[z][i][j - 1] != 'X':
+                        if places[z][i][j - 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif i - 1 >= 0 and places[z][i - 1][j - 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif i + 1 < 5 and places[z][i + 1][j - 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif j - 2 >= 0 and places[z][i][j - 2] == 'P':
+                            answer[z] = 0
+                            break
+                    if j + 1 < 5 and places[z][i][j + 1] != 'X':
+                        if places[z][i][j + 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif i - 1 >= 0 and places[z][i - 1][j + 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif i + 1 < 5 and places[z][i + 1][j + 1] == 'P':
+                            answer[z] = 0
+                            break
+                        elif j + 2 < 5 and places[z][i][j + 2] == 'P':
+                            answer[z] = 0
+                            break
+            
+            if answer[z] == 0:
+                break
+
+    return answer
+
+# 대기실 5개 (각 5 * 5)
+# 맨하튼 거리 2 이하 앉기 금지
+# 파티션이 있으면 맨하튼 거리 x
+# places : 대기실 구조
+# P : 응시자, O : 빈 테이블, X : 파티션
+# return : 거리두기 여부 리스트
