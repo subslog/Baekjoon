@@ -1,0 +1,44 @@
+import collections
+
+def solution(str1, str2):
+    answer = 0          # 정답 저장
+
+    # 대문자로 변환
+    str1 = str1.upper()
+    str2 = str2.upper()
+    # 알파벳일 경우만 두 글자씩 잘라서 리스트에 저장
+    str1_list = [str1[i] + str1[i + 1] for i in range(len(str1) - 1) if str1[i].isalpha() and str1[i + 1].isalpha()]
+    str2_list = [str2[i] + str2[i + 1] for i in range(len(str2) - 1) if str2[i].isalpha() and str2[i + 1].isalpha()]
+
+    # A, B 모두 공집합이면 65536 반환
+    if len(str1_list) == 0 and len(str2_list) == 0: return 65536
+
+    intersection = set(str1_list) & set(str2_list)  # 교집합
+    union = set(str1_list) | set(str2_list)         # 합집합
+
+    # 두 글자의 알파벳이 키인 딕셔너리(값은 동일한 알파벳 카운트)
+    str1_count = collections.Counter(str1_list)
+    str2_count = collections.Counter(str2_list)
+    print(str1_count)
+    print(str2_count)
+    # 교집합 수
+    intersection_count = sum([min(str1_count[i], str2_count[i]) for i in intersection])
+    # 합집합 수
+    union_count = 0
+    for i in union:
+        if i in str1_count and i in str2_count:
+            union_count += max(str1_count[i], str2_count[i])
+        elif i in str1_count:
+            union_count += str1_count[i]
+        elif i in str2_count:
+            union_count += str2_count[i]
+
+    answer = int(intersection_count / union_count * 65536)
+
+    return answer
+
+# 자카드 유사도 : 집합 간의 유사도 검사
+# J(A, B) = 두 집합의 교집합 크기 / 두 집합의 합집합
+# 공집합이면 1
+# 집합이지만 중복 허용
+# 입력된 문자열 두 글자씩 끊어서 다중 집합
