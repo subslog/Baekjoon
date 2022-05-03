@@ -1,0 +1,51 @@
+def calculator(arithmetic, char):
+    import re
+
+    while True:
+        # 피연산자와 연산자 찾기
+        check = re.search('(^-)?([\\+\\*]-)?[0-9]{1,}\\' + char + '-?[0-9]{1,}', arithmetic)
+
+        if check:
+            index = list(check.span())    # 있으면 인덱스 저장
+        else:
+            return arithmetic       # 없으면 결과 반환
+
+        if arithmetic[index[0]] in ('+', '*'):
+            index[0] += 1
+
+        # 연산자 제거하고 피연산자 리스트로 저장
+        num_split = list(map(int, re.sub('([0-9])\\' + char, '\\1 ', arithmetic[index[0]:index[1]]).split()))
+        # 연산자에 따라 연산
+        if char == '+':
+            num = num_split[0] + num_split[1]
+        elif char == '-':
+            num = num_split[0] - num_split[1]
+        elif char == '*':
+            num = num_split[0] * num_split[1]
+
+        # 연산 결과 이어붙이기
+        arithmetic = arithmetic[0:index[0]] + str(num) + arithmetic[index[1]:]
+
+def solution(expression):
+    # 우선순위 리스트
+    priority_list = ['+-*', '+*-', '*-+', '*+-', '-*+', '-+*']
+
+    answer = []
+
+    # 순서대로 반복
+    for i in priority_list:
+        # 우선순위 조합 연산 결과
+        result = expression
+        # 순서대로 연산
+        for j in i:
+            result = calculator(result, j)
+        # 연산 결과 저장
+        answer += [abs(int(result))]
+
+    # 최대값 반환
+    return max(answer)
+
+# 참가자에게 숫자와 (+, -, *) 전달
+# 조합하여 가장 큰 숫자 제출
+# expression : 연산 수식
+# return : 가장 큰 상금 금액 반환
