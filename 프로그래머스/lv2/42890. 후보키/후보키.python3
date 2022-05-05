@@ -1,0 +1,34 @@
+def solution(relation):
+    from itertools import combinations
+
+    answer = []
+
+    column_len = len(relation[0])
+
+    for c_l in range(1, column_len + 1):
+        combination_list = list(combinations(range(column_len), c_l))
+        for combination in combination_list:
+            result = []
+            for user in range(len(relation)):
+                data = []
+                for c in combination:
+                    data.append(relation[user][c])
+                result.append(''.join(data))
+            if len(set(result)) == len(relation):
+                answer.append(combination)
+
+
+
+    for a in answer[:]:
+        for a2 in answer[:]:
+            check = True
+            if a is a2:
+                check = False
+                continue
+            for i in a:
+                if not i in a2:
+                    check = False
+            if check:
+                answer.remove(a2)
+
+    return len(answer)
