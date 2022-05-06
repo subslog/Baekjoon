@@ -1,0 +1,33 @@
+def solution(msg):
+    answer = []     # 정답
+    # 사전 초기화
+    dic = {}
+    for d in range(65, 91):
+        dic[chr(d)] = d - 64
+
+    next_idx = 27       # 다음 색인 번호
+    start_position = 0  # 시작 검사 인덱스
+    end_position = 1    # 마지막 검사 인덱스
+
+    while True:
+        # 단어가 사전에 있으면
+        if dic.get(msg[start_position:end_position]):
+            # 마지막 검사 인덱스가 문자열보다 길면 정답에 추가하고 종료
+            if end_position > len(msg):
+                answer.append(dic[msg[start_position:end_position]])
+                break
+            # 마지막 검사 인덱스 +1
+            else:
+                end_position += 1
+        # 단어가 사전에 없으면
+        else:
+            # 이전에 일치한 단어의 색인 추가
+            answer.append(dic[msg[start_position:end_position - 1]])
+            # 없는 단어 사전에 추가
+            dic[msg[start_position:end_position]] = next_idx
+            # 다음 색인 번호 증가
+            next_idx += 1
+            # 시작 검색 인덱스 재설정
+            start_position = end_position - 1
+
+    return answer
