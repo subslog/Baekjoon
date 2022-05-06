@@ -1,0 +1,9 @@
+def solution(files):
+    import re
+
+    # NUMBER를 기준으로 정렬
+    num_sort = sorted(files, key = lambda file: int(re.search('0*([0-9]+)', file).group(1)))
+    # HEAD를 기준으로 정렬
+    head_sort = sorted(num_sort, key = lambda file: re.match('\D+', file.lower()).group())
+
+    return head_sort
