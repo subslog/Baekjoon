@@ -1,0 +1,31 @@
+def solution(m, musicinfos):
+    import re
+    
+    answer = '(None)'   # 정답
+    answer_time = 0     # 정답의 시간
+
+    # 음악 수만큼 반복
+    for musicinfo in musicinfos:
+        # 멜로디 # 붙으면 소문자로 변경
+        m = re.sub('([A-Z])#', lambda x: x.group(1).lower(), m)
+        # 음악 정보 리스트로 나누기
+        musicinfo = musicinfo.split(',')
+        # # 붙으면 소문자로 변경
+        sound = re.sub('([A-Z])#', lambda x: x.group(1).lower(), musicinfo[3])
+        # 음악 시간을 분으로 변경하여 재생 시간 계산
+        start_minute = int(musicinfo[0].split(':')[0]) * 60 + int(musicinfo[0].split(':')[1])
+        end_minute = int(musicinfo[1].split(':')[0]) * 60 + int(musicinfo[1].split(':')[1])
+        run_time = end_minute - start_minute
+        # 음악 반복 리스트
+        music = sound * (run_time // len(sound) + 1)
+        # 재생된 음악
+        streaming = ''
+        for i in range(0, run_time):
+            streaming += music[i]
+
+        # 재생된 음악에 기억한 멜로디가 있고, 기존 정답의 재생 시간보다 길면 정답 업데이트
+        if streaming.find(m) != -1 and run_time > answer_time:
+            answer = musicinfo[2]
+            answer_time = run_time
+                
+    return answer
