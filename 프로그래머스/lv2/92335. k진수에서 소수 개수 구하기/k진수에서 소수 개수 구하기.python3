@@ -1,0 +1,33 @@
+def change(num, n):
+    '''n진법으로 변환'''
+
+    result = ''
+
+    while num > 0:
+        num, div = divmod(num, n)
+
+        result += str(div)
+    
+    return result[::-1]
+
+def solution(n, k):
+    import re
+
+    answer = 0                  # 정답
+
+    change_num = change(n, k)   # k진수 변환
+
+    # 0을 뺀 숫자 리스트
+    prime_num_list = re.findall('[1-9]+', change_num)
+
+    # 소수 판별
+    for prime in prime_num_list:
+        prime = int(prime)      # 정수 변환
+        # 1이면 검사 x
+        if prime == 1:
+            continue
+        # 2부터 소수의 제곱근까지 나누어지지 않으면 소수
+        elif all(prime % p for p in range(2, int(prime ** 0.5 + 1))):
+            answer += 1
+
+    return answer
