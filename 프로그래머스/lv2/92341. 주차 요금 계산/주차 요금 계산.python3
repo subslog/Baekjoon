@@ -1,0 +1,52 @@
+def solution(fees, records):
+    from math import ceil
+
+    answer = []     # 정답
+    # 차 번호를 기준으로 정렬
+    records_sort = sorted(records, key = lambda record: record.split()[1])
+
+    records_dic = {}
+
+    # 주차 시간 계산
+    for record in records_sort:
+        record_split = record.split()
+        # 분으로 계산
+        minute = int(record_split[0].split(':')[0]) * 60 + int(record_split[0].split(':')[1])
+        # 사전에 차 번호가 없으면 추가
+        if not records_dic.get(record_split[1]):
+            records_dic[record_split[1]] = {'status':'', 'time':0, 'accumulate':0}
+        # 입차
+        if record_split[2] == 'IN':
+            # 입차 시간
+            records_dic[record_split[1]]['time'] = minute
+            # 상태
+            records_dic[record_split[1]]['status'] = 'IN'
+        # 출차
+        elif record_split[2] == 'OUT':
+            # 출차 시간 - 입차 시간
+            parking_time = minute - records_dic[record_split[1]]['time']
+            # 누적 시간에 주차 시간 추가
+            records_dic[record_split[1]]['accumulate'] += parking_time
+            # 입차 시간 초기화
+            records_dic[record_split[1]]['time'] = 0
+            # 상태
+            records_dic[record_split[1]]['status'] = 'OUT'
+    
+    end_time = 1439     # 23:59
+
+    # 요금 정상
+    for record in records_dic:
+        # 입차하고 출차를 안했으면
+        if records_dic[record]['status'] == 'IN':
+            # 23:59 - 입차 시간 추가
+            records_dic[record]['accumulate'] += (end_time - records_dic[record]['time'])
+            records_dic[record]['time'] = 0
+        
+        cash = fees[1]     # 기본 요금
+        # 기본 시간을 초과한 요금 추가
+        if records_dic[record]['accumulate'] > fees[0]:
+            cash += ceil((records_dic[record]['accumulate'] - fees[0]) / fees[2]) * fees[3]
+        
+        answer.append(cash)
+
+    return answer
