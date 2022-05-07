@@ -1,0 +1,34 @@
+def transform(num, n):
+    '''10 -> n 진법 변환'''
+    result = ''
+    # 몫이 0보다 크면 반복
+    while num > 0:
+        num, div = divmod(num, n)   # 몫, 나머지 계산
+        # 나머지가 10보다 크면
+        if div >= 10:
+            # 16진법으로 알파벳 변환
+            div = hex(div).replace('0x', '').upper()
+
+        result += str(div)          # 몫을 삽입
+    # 역순으로 반환
+    return result[::-1]
+
+def solution(n, t, m, p):
+    answer = ''     # 정답
+
+    notation = '0'  # 첫 번째 0
+
+    num = 1         # 다음 숫자
+
+    # t번 말할 수 있도록 이진 수 생성
+    while len(notation) < m * t:
+        notation += transform(num, n)
+        num += 1
+    # 말해야될 순서의 문자 추가
+    for i in range(p - 1, len(notation), m):
+        answer += notation[i]
+        # 말해야될 수를 만족하면 종료
+        if len(answer) == t:
+            break
+
+    return answer
