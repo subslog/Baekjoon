@@ -13,14 +13,11 @@ for _ in range(N):
         for i in range(last + 1, num + 1):
             stack.append(i)
             result.append('+')
-        stack.pop()
-        result.append('-')
         last = num
-    elif stack[-1] == num:
-        stack.pop()
-        result.append('-')
-    elif stack[-1] > num:
+    elif stack[-1] != num:
         print('NO')
         break
+    stack.pop()
+    result.append('-')
 else:
     print("\n".join(result))
