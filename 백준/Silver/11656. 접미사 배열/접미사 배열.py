@@ -1,16 +1,10 @@
-import collections
+S = input()
 
-answer = []                 # 정답 저장 리스트
-deq = collections.deque()   # 문자열 저장 덱
+answer = []   # 정답 저장 리스트
 
-deq += input()              # 문자열 덱에 저장
-
-# 덱 요소가 없어질 때까지 반복
-while deq:
-    # 문자열 추가
-    answer.append("".join(deq))
-    # 문자열 왼쪽 1개 문자 제거
-    deq.popleft()
+# 문자열 왼쪽에서 1개씩 제거하면서 answer에 추가
+for i in range(len(S)):
+    answer.append(S[i:len(S)])
 
 # 오름차순 정렬
 print("\n".join(sorted(answer)))
