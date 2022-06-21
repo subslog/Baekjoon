@@ -1,14 +1,11 @@
-import math
-
 N = int(input())
 
-fac = str(math.factorial(N))
+i = 5
+
 answer = 0
 
-for f in fac[::-1]:
-    if f == '0':
-        answer += 1
-    else:
-        break
+while i <= N:
+    answer += N // i
+    i *= 5
 
 print(answer)
