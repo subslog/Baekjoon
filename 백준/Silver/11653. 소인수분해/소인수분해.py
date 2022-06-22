@@ -1,18 +1,9 @@
 N = int(input())
 
-# 소인수
-i = 2
-
-# 소인수가 N보다 커질 때까지 반복
-while i <= N:
-    # 소인수로 나누어 떨어지면
-    if N % i == 0:
-        # 소인수 출력
+for i in range(2, int(N ** 0.5) + 2):
+    while N % i == 0:
         print(i)
-        # N을 소인수로 나눈다.
-        N = N / i
-        # 소인수 2로 초기화
-        i = 2
-    # 나누어 떨어지지 않으면 소인수 +1
-    else:
-        i += 1
+        N = N // i
+
+if N > 1:
+    print(N)
