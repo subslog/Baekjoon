@@ -1,24 +1,24 @@
-def binary(num: str) -> str:
-    """8진수 -> 2진수 변환"""
-
-    num = int(num)
-    binary = ""
-
-    while num > 1:
-        binary += str(num % 2)  # 2로 나눈 나머지
-        num = num // 2          # 2로 나눈 몫
-    
-    binary += str(num)
-
-    return binary[::-1].rjust(3, "0")
+binary = ["000", "001", "010", "011", "100", "101", "110", "111"]
 
 num = input()
-answer = ""
+start = True    # 맨 앞 숫자 확인용
+answer = ""     # 정답
 
-for i in num:
-    answer += binary(i)
+if num == "0":
+    answer = "0"
 
-if answer == "000":
-    print(0)
-else:
-    print(answer.lstrip("0"))
+for n in num:
+    n = int(n)
+    if start and n < 4:
+        if n == 1:
+            answer += "1"
+        elif n == 2:
+            answer += "10"
+        elif n == 3:
+            answer += "11"
+        start = False
+    else:
+        answer += binary[n]
+        start = False
+
+print(answer)
