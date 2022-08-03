@@ -34,6 +34,9 @@ for _ in range(K):
             # 현재 노드와 인접한 노드가 같은 그룹이면 이분 그래프가 아니다.
             if group[i] == group[j]:
                 check = False
-
-    if check: print("YES")
-    else: print("NO")
+                break
+        if not check: 
+            print("NO")
+            break
+    else:
+        print("YES")
