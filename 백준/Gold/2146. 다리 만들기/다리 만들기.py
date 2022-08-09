@@ -9,6 +9,10 @@ N = int(input())
 a = [list(map(int, input().split())) for _ in range(N)]
 # 방문 확인용
 check = [[False] * N for _ in range(N)]
+# 거리 계산용
+dist = [[-1] * N for _ in range(N)]
+# 섬 저장용 큐
+dist_q = deque()
 
 def distinction(x: int, y: int, cnt: int):
     """섬을 구분하는 함수"""
@@ -17,6 +21,8 @@ def distinction(x: int, y: int, cnt: int):
     q.append((x, y))
     check[x][y] = True
     a[x][y] = cnt
+    dist[x][y] = 0
+    dist_q.append((x, y))
     # bfs 수행
     while q:
         x, y = q.popleft()
@@ -27,6 +33,8 @@ def distinction(x: int, y: int, cnt: int):
             if 0 <= nx < N and 0 <= ny < N and a[nx][ny] and check[nx][ny] == False:
                 check[nx][ny] = True    # 방문 처리
                 a[nx][ny] = cnt         # 섬 구분을 위해 값 변경
+                dist[nx][ny] = 0          # 자신의 섬은 거리가 0
+                dist_q.append((nx, ny)) # 섬간의 거리 구할 때 사용
                 q.append((nx, ny))
 
 cnt = 0 # 섬 구분용
@@ -37,39 +45,26 @@ for i in range(N):
         if a[i][j] and check[i][j] == False:
             cnt += 1
             distinction(i, j, cnt)
+# 각 노드를 기준으로 거리 계산
+while dist_q:
+    x, y = dist_q.popleft() # 현재 노드
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+        # 범위를 벗어나지 않고, 바다면
+        if 0 <= nx < N and 0 <= ny < N and dist[nx][ny] == -1:
+            dist[nx][ny] = dist[x][y] + 1   # 현재 노드 가중치 +1
+            a[nx][ny] = a[x][y]             # 바다를 섬으로 바꾼다.
+            dist_q.append((nx, ny))
 
-# 거리 계산용
-dist = [[-1] * N for _ in range(N)]
 # 최소 거리 저장용
 answer = 10000
-# 섬 간의 최소 거리 찾기
-for l in range(1, cnt + 1):
-    dist_q = deque()
-    for i in range(N):
-        for j in range(N):
-            dist[i][j] = -1
-            # 같은 섬은 0으로 처리
-            if a[i][j] == l:
-                dist[i][j] = 0
-                dist_q.append((i, j))
-    # 현재 섬에서 나머지 섬까지 거리 확인
-    while dist_q:
-        # 현재 노드
-        x, y = dist_q.popleft()
-        # 인접 노드 확인
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            # 범위를 벗어나지 않으면
-            if 0 <= nx < N and 0 <= ny < N:
-                # 바다라면 현재 노드의 가중치에서 +1
-                if dist[nx][ny] == -1:
-                    dist[nx][ny] = dist[x][y] + 1
-                    dist_q.append((nx, ny))
-    # 최소 거리 찾기
-    for i in range(N):
-        for j in range(N):
-            # 현재 섬과 다르면 거리 갱신
-            if a[i][j] > 0 and a[i][j] != l:
-                answer = min(answer, dist[i][j] - 1)
+# 인접한 노드를 비교
+for i in range(N):
+    for j in range(N):
+        for k in range(4):
+            x, y = i + dx[k], j + dy[k]
+            # 범위를 넘지 않고, 섬이 다르면 거리 갱신
+            if 0 <= x < N and 0 <= y < N and a[i][j] != a[x][y]:
+                answer = min(answer, dist[i][j] + dist[x][y])
 
 print(answer)
