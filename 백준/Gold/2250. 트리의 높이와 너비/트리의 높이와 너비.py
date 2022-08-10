@@ -39,9 +39,12 @@ width = {}
 cnt = 0
 
 inorder(root, 1)
-# 각 레벨의 최대 너비 계산
+level = 1
+ans = 0
+# 최대 너비 찾기
 for i in width:
-    width[i] = max(width[i]) - min(width[i]) + 1
-# 내림차순 정렬
-answer = sorted(width, key=lambda x: width[x], reverse=True)
-print(answer[0], width[answer[0]])
+    if max(width[i]) - min(width[i]) + 1> ans:
+        level = i
+        ans = max(width[i]) - min(width[i]) + 1
+
+print(level, ans)
