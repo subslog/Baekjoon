@@ -22,7 +22,7 @@ operators = ''
 for idx, i in enumerate(arithmetic):
     operators += operator[idx] * i
 # 연산자 순열 반복
-permutation = permutations(operators)
+permutation = set(map(''.join, permutations(operators)))
 for p in permutation:
     left_num = A[0]
     # 연산 수행
