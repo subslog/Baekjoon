@@ -1,56 +1,30 @@
-def next_permutation(a):
-    """다음 순열로 변경하는 함수"""
-    i = len(a) - 1
-    while i > 0 and a[i - 1] >= a[i]:
-        i -= 1
-    if i <= 0: return False
+def clac(index: int, result: int, plus: int, minus: int, mul: int, div: int):
+    """연산자를 조합해 최댓값, 최솟값을 찾는 함수"""
+    # 마지막 연산이 끝나면 재귀 종료
+    if index == N:
+        # 최솟값, 최댓값 갱신
+        ans[0] = min(ans[0], result)
+        ans[1] = max(ans[1], result)
 
-    last_idx = i - 1
-    for j in range(last_idx + 1, N - 1):
-        if a[last_idx] < a[j]:
-            exchange = j
-
-    a[last_idx], a[exchange] = a[exchange], a[last_idx]
-
-    a[last_idx + 1:] = a[-1:last_idx:-1]
-
-    return True
-
-def calc(left: int, right: int, oper: str) -> int:
-    """연산 결과 반환 함수"""
-    if oper == '+': return left + right
-    elif oper == '-': return left - right
-    elif oper == '*': return left * right
-    else:
-        if left >= 0: return left // right
-        else: return abs(left) // right * -1
-
-# 정답 저장(최댓값, 최솟값)
-answer = [-1000000000, 1000000000]
-# 연산자
-operator = ['+', '-', '*', '/']
-# 초기 입력값
-N = int(input())
-A = list(map(int, input().split()))
-arithmetic = map(int, input().split())
-# 연산자로 변환
-operators = []
-for idx, i in enumerate(arithmetic):
-    for j in range(i):
-        operators.append(operator[idx])
-operators.sort()
-
-while True:
-    left_num = A[0]
     # 연산 수행
-    for i in range(1, N):
-        right_num = A[i]
-        left_num = calc(left_num, right_num, operators[i - 1])
-    # 최댓값, 최솟값 업데이트
-    answer[0] = max(answer[0], left_num)
-    answer[1] = min(answer[1], left_num)
-    # 다음 순열이 없으면 반복 종료
-    if not next_permutation(operators): break
+    if plus > 0:
+        clac(index + 1, result + arr[index], plus - 1, minus, mul, div)
+    if minus > 0:
+        clac(index + 1, result - arr[index], plus, minus - 1, mul, div)
+    if mul > 0:
+        clac(index + 1, result * arr[index], plus, minus, mul - 1, div)
+    if div > 0:
+        if result >= 0:
+            clac(index + 1, result // arr[index], plus, minus, mul, div - 1)
+        else:
+            clac(index + 1, abs(result) // arr[index] * -1, plus, minus, mul, div - 1)
 
-print(answer[0])
-print(answer[1])
+N = int(input())
+arr = list(map(int, input().split()))
+plus, minus, mul, div = map(int, input().split())
+# 최솟값, 최댓값
+ans = [1000000000, -1000000000]
+clac(1, arr[0], plus, minus, mul, div)
+
+print(ans[1])
+print(ans[0])
