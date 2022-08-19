@@ -1,58 +1,48 @@
-def game(cnt: int, p1: list, p2: list):
+def game(cnt: int, x1: int, y1: int, x2: int, y2: int):
     """동전을 하나만 떨어뜨리기 위한 최소 횟수 구하는 함수"""
     global ans
-    # 재귀 종료 조건 : 동전 겹칠 때, 버튼 11번 이상, 동전이 동시 추락
-    if p1 == p2 or cnt > 10 or (board[p1[0]][p1[1]] == False and board[p2[0]][p2[1]] == False):
+    # 동전 추락 확인
+    fall1 , fall2 = False, False
+    if x1 < 0 or x1 >= N or y1 < 0 or y1 >= M:
+        fall1 = True
+    if x2 < 0 or x2 >= N or y2 < 0 or y2 >= M:
+        fall2 = True
+    # 재귀 종료 조건 : 동전 겹칠 때, 버튼 11번, 동전이 동시 추락
+    if [x1, y1] == [x2, y2] or cnt == 11 or (fall1 and fall2):
         return
-    # 동전이 떨어지면 정답 갱신 후 재귀 종료
-    if board[p1[0]][p1[1]] == False or board[p2[0]][p2[1]] == False:
+    # 동전이 1개만 떨어지면 정답 갱신 후 재귀 종료
+    if fall1 or fall2:
         ans = min(ans, cnt)
         return
+    # 동전 상, 하, 좌, 우 이동
+    for k in range(4):
+        nx1, ny1 = x1 + dx[k], y1 + dy[k]
+        nx2, ny2 = x2 + dx[k], y2 + dy[k]
+        # 이동하는 위치에 벽이 있으면 위치 초기화
+        if 0 <= nx1 < N and 0 <= ny1 < M and board[nx1][ny1] == '#':
+            nx1, ny1 = x1, y1
+        if 0 <= nx2 < N and 0 <= ny2 < M and board[nx2][ny2] == '#':
+            nx2, ny2 = x2, y2
+        # 재귀 호출
+        game(cnt + 1, nx1, ny1, nx2, ny2)
 
-    # 1개 동전 인접 노드에 벽이 있거나 2개 동전 인접 노드에 벽이 없으면 재귀
-    # 위로 이동
-    if board[p1[0] - 1][p1[1]] == '#' and board[p2[0] - 1][p2[1]] != '#':
-        game(cnt + 1, [p1[0], p1[1]], [p2[0] - 1, p2[1]])
-    elif board[p1[0] - 1][p1[1]] != '#' and board[p2[0] - 1][p2[1]] == '#':
-        game(cnt + 1, [p1[0] - 1, p1[1]], [p2[0], p2[1]])
-    elif board[p1[0] - 1][p1[1]] != '#' and board[p2[0] - 1][p2[1]] != '#':
-        game(cnt + 1, [p1[0] - 1, p1[1]], [p2[0] - 1, p2[1]])
-    # 아래로 이동
-    if board[p1[0] + 1][p1[1]] == '#' and board[p2[0] + 1][p2[1]] != '#':
-        game(cnt + 1, [p1[0], p1[1]], [p2[0] + 1, p2[1]])
-    elif board[p1[0] + 1][p1[1]] != '#' and board[p2[0] + 1][p2[1]] == '#':
-        game(cnt + 1, [p1[0] + 1, p1[1]], [p2[0], p2[1]])
-    elif board[p1[0] + 1][p1[1]] != '#' and board[p2[0] + 1][p2[1]] != '#':
-        game(cnt + 1, [p1[0] + 1, p1[1]], [p2[0] + 1, p2[1]])
-    # 오른쪽으로 이동
-    if board[p1[0]][p1[1] + 1] == '#' and board[p2[0]][p2[1] + 1] != '#':
-        game(cnt + 1, [p1[0], p1[1]], [p2[0], p2[1] + 1])
-    elif board[p1[0]][p1[1] + 1] != '#' and board[p2[0]][p2[1] + 1] == '#':
-        game(cnt + 1, [p1[0], p1[1] + 1], [p2[0], p2[1]])
-    elif board[p1[0]][p1[1] + 1] != '#' and board[p2[0]][p2[1] + 1] != '#':
-        game(cnt + 1, [p1[0], p1[1] + 1], [p2[0], p2[1] + 1])
-    # 왼쪽으로 이동
-    if board[p1[0]][p1[1] - 1] == '#' and board[p2[0]][p2[1] - 1] != '#':
-        game(cnt + 1, [p1[0], p1[1]], [p2[0], p2[1] - 1])
-    elif board[p1[0]][p1[1] - 1] != '#' and board[p2[0]][p2[1] - 1] == '#':
-        game(cnt + 1, [p1[0], p1[1] - 1], [p2[0], p2[1]])
-    elif board[p1[0]][p1[1] - 1] != '#' and board[p2[0]][p2[1] - 1] != '#':
-        game(cnt + 1, [p1[0], p1[1] - 1], [p2[0], p2[1] - 1])
+# 상, 하, 좌, 우 상대 좌표
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
 N, M = map(int, input().split())
 # 보드 생성 및 동전의 위치 찾기
-board = [[False] * (M + 2)]
+board = []
 position = []
 ans = 11
-for i in range(1, N + 1):
-    board.append([False] + list(input()) + [False])
+for i in range(N):
+    board.append(list(input()))
     # 코인이 있으면 위치 추가
-    coin_cnt = list(filter(lambda x: board[-1][x] == 'o', range(1, M + 1)))
+    coin_cnt = list(filter(lambda x: board[-1][x] == 'o', range(M)))
     if coin_cnt:
         position += [[i, c] for c in coin_cnt]
-board.append([False] * (M + 2))
 
-game(0, position[0], position[1])
+game(0, position[0][0], position[0][1], position[1][0], position[1][1])
 
 if ans == 11: print(-1)
 else: print(ans)
