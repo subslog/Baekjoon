@@ -1,10 +1,7 @@
 import sys
 
 N = int(input())
-num_list = []
+answer = [int(sys.stdin.readline()) for _ in range(N)]
+answer.sort()
 
-for _ in range(N):
-    num_list += [int(sys.stdin.readline())]
-
-for i in sorted(num_list):
-    print(i)
+print('\n'.join(map(str, answer)))
