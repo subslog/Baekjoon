@@ -12,7 +12,7 @@ road = [i for i in range(D + 1)]
 
 # DP 수행
 for i in range(1, D + 1):
-    road[i] = min(road[i], road[i - 1] + 1)
+    road[i] = road[i - 1] + 1
     # 지름길이 빠르면 업데이트
     for s, e, d in shortcut:
         if s >= 0 and e == i and road[s] + d < road[e]:
