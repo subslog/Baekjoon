@@ -19,7 +19,8 @@ def parking_cal(d_time: int, d_won: int, time: int, won: int, p_time : int):
 
 def solution(fees, records):
     answer = []
-    parking = dict()    # 차량 입차, 출차 체크용 딕셔너리
+    parking = [-1] * 10000      # 차량 입차, 출차 체크용 리스트
+    total = [0] * 10000         # 토탈 시간 저장용 리스트
     
     # 입차, 출차 처리
     for record in records:
@@ -28,28 +29,23 @@ def solution(fees, records):
         number = int(number)
         # 시간을 분으로 환산
         minute = time_change(time)
-        # 딕셔너리에 키가 없으면 추가[시간, 누적 시간]
-        if not number in parking:
-            parking[number] = [0, 0]
-        # 입차면 parking 딕셔너리에 시간 추가
+        # 입차면 parking 리스트에 시간 추가
         if state == 'IN':
-            parking[number][0] = minute
-        # 출차면 parking 딕셔너리에서 제거 후 요금 계산
+            parking[number] = minute
+        # 출차면 parking 리스트에서 제거 후 total 리스트에 누적
         else:
-            parking[number][1] += minute - parking[number][0]
-            parking[number][0] = -1
-            
-    # 차 번호 순으로 오름차순 정렬
-    parking = sorted(parking.items())
+            total[number] += minute - parking[number]
+            parking[number] = -1
     
     # 요금 계산
     minute = time_change('23:59')
-    for p in parking:
+    for i in range(10000):
         # 출차를 안했으면 출차 시간 23:59 으로 계산
-        if p[1][0] != -1:
-            p[1][1] += minute - p[1][0]
-            p[1][0] = -1
+        if parking[i] != -1:
+            total[i] += minute - parking[i]
+            parking[i] = -1
         # 주차 요금 계산
-        answer.append(parking_cal(fees[0], fees[1], fees[2], fees[3], p[1][1]))
+        if total[i] > 0:
+            answer.append(parking_cal(fees[0], fees[1], fees[2], fees[3], total[i]))
     
     return answer
