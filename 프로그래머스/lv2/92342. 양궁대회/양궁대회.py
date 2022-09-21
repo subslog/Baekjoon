@@ -16,18 +16,6 @@ def score_cal(apeach: list, ryan: list):
     # 점수 차이 반환
     return r_score - a_score
 
-def target_check(existing: list, now: list):
-    """두 가지 경우 중 더 적은 과녁을 맞춘 경우를 반환"""
-    e_cnt = 0
-    n_cnt = 0
-    for i in range(11):
-        e_cnt += i * existing[i]
-        n_cnt += i * now[i]
-    if e_cnt < n_cnt:
-        return existing
-    else:
-        return now
-
 def solution(n, info):
     answer = [-1]
     # 점수를 뒤집는다
