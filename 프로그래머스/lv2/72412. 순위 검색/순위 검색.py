@@ -1,38 +1,29 @@
+import bisect
+
 def solution(info, query):
-    import bisect   # 이진 탐색
-
-    answer = []     # 정답 저장
-
-    info_dic = {}   # 문의조건 리스트
-
-    # 문의조건 리스트 생성
+    answer = []
+    # 쿼리 조건을 딕셔너리로 생성
+    info_dict = dict()
     for lang in ['cpp', 'java', 'python', '-']:
         for job in ['backend', 'frontend', '-']:
             for career in ['junior', 'senior', '-']:
-                for menu in ['chicken', 'pizza', '-']:
-                    info_dic[lang + job + career + menu] = []
-    # 지원자의 점수를 문의조건 리스트에 추가
-    for i in info:
-        i = i.split(' ')
-        for lang in [i[0], '-']:
-            for job in [i[1], '-']:
-                for career in [i[2], '-']:
-                    for menu in [i[3], '-']:
-                        info_dic[lang + job + career + menu].append(int(i[4]))
+                for food in ['chicken', 'pizza', '-']:
+                    info_dict[lang + job + career + food] = []
+    # 지원자 정보에 맞게 점수 추가
+    for user in info:
+        lang, job, career, food, score = user.split()
+        for l in [lang, '-']:
+            for j in [job, '-']:
+                for c in [career, '-']:
+                    for f in [food, '-']:
+                        info_dict[l + j + c + f].append(int(score))
     # 점수를 기준으로 정렬
-    for i_d in info_dic:
-        info_dic[i_d].sort()
-    # 문의조건만큼 반복
+    for key in info_dict:
+        info_dict[key].sort()
+    # 요구사항에 만족하는 지원자 수 확인
     for q in query:
-        # ' and '를 제거해서 이어 붙인다.
-        requir = q.replace(' and ', '').split()
-        # 점수
-        score = int(requir[1])
-        # 조건
-        requir = requir[0]
-        # 조건을 키로 문의한 점수 이상의 지원자 수
-        result = len(info_dic[requir]) - bisect.bisect_left(info_dic[requir], score)
-
-        answer.append(result)
-
+        # ' and ' 제거하고 연결한다.
+        requir, score = q.replace(' and ', '').split()
+        answer.append(len(info_dict[requir]) - bisect.bisect_left(info_dict[requir], int(score)))
+    
     return answer
