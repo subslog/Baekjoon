@@ -34,9 +34,9 @@ def solution(n, t, m, timetable):
     # 자리가 없으면 제일 늦게 탈 수 있는 시간을 찾는다.
     else:
         late_time = time_change('00:00')
-        for i in range(n):
-            for bus in buses[i]:
-                late_time = max(late_time, bus - 1)
+        for bus in buses:
+            for time in bus:
+                late_time = max(late_time, time - 1)
 
     answer = str(late_time // 60).zfill(2) + ':' + str(late_time % 60).zfill(2)
                 
