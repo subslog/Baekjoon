@@ -1,15 +1,19 @@
 def solution(id_list, report, k):
-    answer = [0] * len(id_list)         # 정답 리스트
-    report = list(set(report))          # 중복 제거
-    re_id = {i : 0 for i in id_list}    # 신고id 카운트
-
-    # 신고 당한 횟수 카운트
+    # 메일을 받을 신고한 ID 목록 및 신고 당한 ID
+    reporter_id = dict()
+    black_id = dict()
+    for id in id_list:
+        reporter_id[id] = 0
+        black_id[id] = set()
+    # 신고한 ID 추가
     for re in report:
-        re_id[re.split()[1]] += 1
-
-    # k번 이상 신고당한 id를 신고한 이용자 메일 발송 카운트
-    for re in report:
-        if re_id[re.split()[1]] >= k:
-            answer[id_list.index(re.split()[0])] += 1
-    
-    return answer
+        user_id = re.split()
+        black_id[user_id[1]].add(user_id[0])
+    # k회 이상 신고된 ID 확인
+    for b_id in black_id:
+        # k회 이상 신고되었으면 신고한 ID에 메일을 보낸다.
+        if k <= len(black_id[b_id]):
+            for email_id in black_id[b_id]:
+                reporter_id[email_id] += 1
+                
+    return list(reporter_id.values())
