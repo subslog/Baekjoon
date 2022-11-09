@@ -2,30 +2,35 @@ from collections import deque
 
 def solution(queue1, queue2):
     answer = -1
-    # 목표값
-    l_sum = sum(queue1)
-    r_sum = sum(queue2)
-    # 큐 생성
-    q_left = deque(queue1)
-    q_right = deque(queue2)
+    
+    # 큐 변환
+    queue1 = deque(queue1)
+    queue2 = deque(queue2)
 
-    # 비교 시작
-    cnt = 0
-    while cnt < len(queue1) * 3:
-        # 두 개 큐의 합이 같으면 종료
-        if l_sum == r_sum:
+    sum1 = sum(queue1)                          # queue1 합
+    sum2 = sum(queue2)                          # queue2 합
+    lenth = (len(queue1) + len(queue2)) * 2     # 반복할 횟수
+    cnt = 0                                     # 반복한 횟수
+    
+    # 각 큐의 합을 비교하며 pop, insert 진행
+    while cnt <= lenth:
+        # queue2의 합이 더 크면
+        if sum1 < sum2:
+            tmp = queue2.popleft()  # queue2 pop
+            queue1.append(tmp)      # queue1 insert
+            sum1 += tmp             # queue1 합에 더하기
+            sum2 -= tmp             # queue2 합에서 빼기
+        # queue1의 합이 더 크면
+        elif sum2 < sum1:
+            tmp = queue1.popleft()  # queue1 pop
+            queue2.append(tmp)      # queue2 insert
+            sum1 -= tmp             # queue1 합에서 빼기
+            sum2 += tmp             # queue2 합에 더하기
+        # queue1 = queue2면 정답
+        else:
             answer = cnt
             break
-        # 오른쪽이 크면 왼쪽으로 원소를 넘긴다.
-        elif l_sum < r_sum:
-            l_sum += q_right[0]
-            r_sum -= q_right[0]
-            q_left.append(q_right.popleft())
-        # 왼쪽이 크면 오른쪽으로 원소를 넘긴다.
-        else:
-            l_sum -= q_left[0]
-            r_sum += q_left[0]
-            q_right.append(q_left.popleft())
+        # 카운터 증가
         cnt += 1
-            
+
     return answer
