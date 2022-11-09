@@ -1,41 +1,49 @@
 from itertools import combinations_with_replacement
-def score_cal(apeach: list, ryan: list):
-    """어피치와 라이언의 점수 차이를 계산하는 함수"""
+
+def result(apeach: list, ryan: list):
+    """라이언과 어피치의 점수차를 반환하는 함수"""
     # 어피치, 라이언 점수
-    a_score = 0
-    r_score = 0
-    for i in range(1, 11):
-        # 둘 중 한 명이라도 과녁을 맞췄으면 계산
-        if apeach[i] or ryan[i]:
-            # 어피치 점수 획득
-            if apeach[i] >= ryan[i]:
-                a_score += i
-            # 라이언 점수 획득
-            else:
-                r_score += i
-    # 점수 차이 반환
+    a_score, r_score = 0, 0
+    # 점수 계산
+    for i in range(11):
+        # 둘 다 못맞추면 점수 획득 불가
+        if apeach[i] == 0 and ryan[i] == 0:
+            continue
+        # 라이언 점수 획득
+        elif apeach[i] < ryan[i]:
+            r_score += i
+        # 어피치 점수 획득
+        else:
+            a_score += i
     return r_score - a_score
 
 def solution(n, info):
-    answer = [-1]
-    # 점수를 뒤집는다
+    answer = []
+    
+    # 편의를 위해 뒤집는다.
     info.reverse()
-    # 라이언이 과녁을 맞추는 모든 경우의 수
-    combi = combinations_with_replacement([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], n)
-    # 라이언의 모든 경우의 수와 비교하여 최대 점수 차이를 찾는다.
-    max_diff = 0
-    for c in combi:
-        # 라이언이 맞춘 과녁
+    # 라이언이 n번으로 맞출 수 있는 모든 케이스
+    ryan_cases = list(combinations_with_replacement(list(range(0, 11)), n))
+    # 라이언과 어피치 가장 큰 점수 차
+    max_score = 0
+    
+    # 모든 케이스를 비교
+    for case in ryan_cases:
+        # 라이언 과녁 결과
         ryan = [0] * 11
-        for i in c:
-            ryan[i] += 1
-        # 현재 점수 차이
-        now_diff = score_cal(info, ryan)
-        # 라이언의 점수가 더 높으면 점수 갱신
-        if max_diff < now_diff:
-            max_diff = now_diff
+        for hit in case:
+            ryan[hit] += 1
+        # 라이언 점수 - 어피치 점수
+        score = result(info, ryan)
+        # 현재 점수 차가 더 크면 업데이트
+        if max_score < score:
+            max_score = score
             answer = ryan
-    # 점수를 뒤집는다.
-    answer.reverse()
+    # 라이언이 이길 수 없으면 -1
+    if max_score == 0:
+        answer = [-1]
+    # 이길 수 있으면 뒤집는다.
+    else:
+        answer.reverse()
 
-    return  answer
+    return answer
